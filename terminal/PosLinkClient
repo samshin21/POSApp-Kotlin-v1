@@ -1,0 +1,47 @@
+package com.example.app.terminal
+
+import com.pax.poslink.*
+
+class PosLinkClient(private val ipAddress: String, private val port: String) {
+    /**
+     * Creates and returns an initialized PosLink with the desired CommSetting.
+     */
+    fun setupPosLink(): PosLink {
+        val posLink = PosLink()
+        posLink.SetCommSetting(
+            CommSetting().apply {
+                setType(CommSetting.TCP)
+                setDestIP(ipAddress)
+                setDestPort(port)
+                setTimeOut("30000")  // Timeout in milliseconds
+            }
+        )
+        return posLink
+    }
+
+    /**
+     * Creates a PaymentRequest object based on the amount in cents.
+     */
+    fun createPaymentRequest(formattedAmount: String): PaymentRequest {
+        return PaymentRequest().apply {
+            // Example: 1 = Card Payment, 2 = Sale
+            TenderType = 1
+            TransType = 2
+            Amount = formattedAmount
+        }
+    }
+
+    /**
+     * Process the transaction and print results or exceptions.
+     */
+    fun processTransaction(posLink: PosLink) {
+        try {
+            val result = posLink.ProcessTrans()
+            println("Response Code: ${result.Code}, Message: ${result.Msg}")
+        } catch (e: Exception) {
+            println("Error processing transaction: ${e.message}")
+            throw e
+        }
+    }
+
+}
