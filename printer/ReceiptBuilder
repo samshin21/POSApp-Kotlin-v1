@@ -1,0 +1,70 @@
+package com.example.app.printer
+
+import android.util.Log
+import com.example.app.ReceiptItem
+import java.nio.charset.Charset
+
+class ReceiptBuilder(private val orderedItems: List<ReceiptItem>) {
+
+    fun printReceipt(printerClient: PrinterClient, orderNumber: String, paymentType: String) {
+        try {
+            val escReset = byteArrayOf(0x1B, 0x40) // ESC @
+            val escAlignCenter = byteArrayOf(0x1B, 0x61, 0x01) // ESC a 1 (Center alignment)
+            val escAlignLeft = byteArrayOf(0x1B, 0x61, 0x00) // ESC a 0 (Left alignment)
+            val escDoubleHeight = byteArrayOf(0x1B, 0x21, 0x10) // ESC ! 16 (Double height)
+            val escNormalText = byteArrayOf(0x1B, 0x21, 0x00) // ESC ! 0 (Normal text)
+            val cutPaper = byteArrayOf(0x1D, 0x56, 0x01) // GS V 1 - Partial cut
+
+            val separator = "------------------------------------------\n".toByteArray(Charset.forName("UTF-8"))
+
+            printerClient.sendData(escReset)
+
+            // Header
+            printerClient.sendData(escAlignCenter)
+            printerClient.sendData(escDoubleHeight)
+            printerClient.sendData("Order Number: $orderNumber\n".toByteArray(Charset.forName("UTF-8")))
+            printerClient.sendData("Payment Type: $paymentType\n".toByteArray(Charset.forName("UTF-8")))
+            printerClient.sendData(escNormalText)
+            printerClient.sendData(separator)
+
+            // Items
+            printerClient.sendData(escAlignLeft)
+            var totalPrice = 0.0
+            var totalTax = 0.0
+
+            orderedItems.forEach { item ->
+                val itemPrice = item.price.toDoubleOrNull() ?: 0.0
+                val itemTax = item.tax.toDoubleOrNull() ?: 0.0
+                totalPrice += itemPrice
+                totalTax += itemTax
+
+                Log.d("ReceiptBuilder", "Accumulating Total Price: $totalPrice")
+                val itemLine = "${item.itemName.padEnd(20)}${item.price.padStart(10)}${item.tax.padStart(10)}\n"
+                printerClient.sendData(itemLine.toByteArray(Charset.forName("UTF-8")))
+            }
+
+            // Grand Total
+            val grandTotal = totalPrice + totalTax
+            printerClient.sendData(separator)
+            printerClient.sendData("Total Price: ${String.format("%.2f", totalPrice)}\n".toByteArray(Charset.forName("UTF-8")))
+            printerClient.sendData("Total Tax: ${String.format("%.2f", totalTax)}\n".toByteArray(Charset.forName("UTF-8")))
+            printerClient.sendData("Grand Total: ${String.format("%.2f", grandTotal)}\n".toByteArray(Charset.forName("UTF-8")))
+            printerClient.sendData(separator)
+
+            // Footer
+            printerClient.sendData(escAlignCenter)
+            printerClient.sendData("*** Thank You! ***\n".toByteArray(Charset.forName("UTF-8")))
+            printerClient.sendData("\n".toByteArray(Charset.forName("UTF-8"))) // One empty line
+            printerClient.sendData("\n".toByteArray(Charset.forName("UTF-8"))) // One empty line
+            printerClient.sendData("\n".toByteArray(Charset.forName("UTF-8"))) // One empty line
+            printerClient.sendData("\n".toByteArray(Charset.forName("UTF-8"))) // One empty line
+            printerClient.sendData("\n".toByteArray(Charset.forName("UTF-8"))) // One empty line
+            printerClient.sendData(cutPaper)
+
+            Log.d("ReceiptBuilder", "Receipt printed successfully")
+        } catch (e: Exception) {
+            Log.e("ReceiptBuilder", "Error printing receipt: ${e.message}")
+            throw e
+        }
+    }
+}
