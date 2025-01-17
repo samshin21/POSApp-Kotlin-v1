@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- Top Bar showing user input -->
+    <TextView
+        android:id="@+id/topBarTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_a_number"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Journal on the left in landscape -->
+    <ListView
+        android:id="@+id/journalListView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/topBarTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/numberPadGrid" />
+
+    <!-- Number Pad on the right -->
+    <GridLayout
+        android:id="@+id/numberPadGrid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:rowCount="4"
+        android:useDefaultMargins="true"
+        app:layout_constraintTop_toBottomOf="@id/topBarTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/journalListView"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Digit buttons 1 to 9 -->
+        <Button
+            android:id="@+id/button_1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_1" />
+
+        <Button
+            android:id="@+id/button_2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_2" />
+
+        <Button
+            android:id="@+id/button_3"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_3" />
+
+        <Button
+            android:id="@+id/button_4"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_4" />
+
+        <Button
+            android:id="@+id/button_5"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_5" />
+
+        <Button
+            android:id="@+id/button_6"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_6" />
+
+        <Button
+            android:id="@+id/button_7"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_7" />
+
+        <Button
+            android:id="@+id/button_8"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_8" />
+
+        <Button
+            android:id="@+id/button_9"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_9" />
+
+        <!-- Clear button -->
+        <Button
+            android:id="@+id/button_clear"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_clear" />
+
+        <!-- Zero button -->
+        <Button
+            android:id="@+id/button_0"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_0" />
+
+        <!-- Double zero button -->
+        <Button
+            android:id="@+id/button_00"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/digit_00" />
+    </GridLayout>
+
+    <!-- No Tax Button below number pad -->
+    <Button
+        android:id="@+id/button_no_tax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_no_tax"
+        app:layout_constraintTop_toBottomOf="@id/numberPadGrid"
+        app:layout_constraintStart_toStartOf="@id/numberPadGrid"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Tax Button next to No Tax button -->
+    <Button
+        android:id="@+id/button_tax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_tax"
+        app:layout_constraintTop_toBottomOf="@id/numberPadGrid"
+        app:layout_constraintStart_toEndOf="@id/button_no_tax"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <Button
+        android:id="@+id/button_cash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_cash"
+        app:layout_constraintBottom_toTopOf="@id/numberPadGrid"
+        app:layout_constraintStart_toEndOf="@id/button_tax"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Card Button next to Cash button -->
+    <Button
+        android:id="@+id/button_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_card"
+        app:layout_constraintBottom_toTopOf="@id/numberPadGrid"
+        app:layout_constraintStart_toEndOf="@id/button_cash"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
