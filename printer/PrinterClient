@@ -1,0 +1,43 @@
+package com.example.app.printer
+
+import android.util.Log
+import java.io.OutputStream
+import java.net.Socket
+
+class PrinterClient(private val ipAddress: String, private val port: Int) {
+    private var socket: Socket? = null
+    private var outputStream: OutputStream? = null
+
+    fun connect() {
+        try {
+            socket = Socket(ipAddress, port)
+            outputStream = socket?.getOutputStream()
+            Log.d("PrinterClient", "Connected to printer at $ipAddress:$port")
+        } catch (e: Exception) {
+            Log.e("PrinterClient", "Failed to connect to printer: ${e.message}")
+            throw e
+        }
+    }
+
+    fun sendData(data: ByteArray) {
+        try {
+            outputStream?.write(data)
+            outputStream?.flush()
+        } catch (e: Exception) {
+            Log.e("PrinterClient", "Error sending data to printer: ${e.message}")
+            throw e
+        }
+    }
+
+    fun close() {
+        try {
+            outputStream?.close()
+            socket?.close()
+            Log.d("PrinterClient", "Printer connection closed")
+        } catch (e: Exception) {
+            Log.e("PrinterClient", "Error closing printer connection: ${e.message}")
+        }
+    }
+
+
+}
